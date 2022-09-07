@@ -66,7 +66,15 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
         .bigPicture(eggImage)
         .bigLargeIcon(null)
 
-    // TODO: Step 2.2 add snooze action
+    // create a snooze intent and pending intent
+    // pass in application context, request code for this pending intent, snooze intent, and appropriate flag
+    val snoozeIntent = Intent(applicationContext, SnoozeReceiver::class.java)
+    val snoozePendingIntent: PendingIntent = PendingIntent.getBroadcast(
+        applicationContext,
+        REQUEST_CODE,
+        snoozeIntent,
+        PendingIntent.FLAG_ONE_SHOT
+    )
 
     // get an instance of the NotificationCompat builder, pass in app context and channel id
     // channel id is a string value from string resources which uses the matching channel
@@ -92,7 +100,14 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
         .setStyle(bigPicStyle)
         .setLargeIcon(eggImage)
 
-    // TODO: Step 2.3 add snooze action
+    // call add action
+    // pass in icon, text to describe your action, and the pending intent
+    // the pending intent will be used to trigger the right broadcast receiver
+        .addAction(
+            R.drawable.egg_icon,
+            applicationContext.getString(R.string.snooze),
+            snoozePendingIntent
+        )
 
     // TODO: Step 2.5 set priority
 
@@ -101,7 +116,6 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
     notify(NOTIFICATION_ID, builder.build())
 }
 
-// TODO: Step 1.14 Cancel all notifications
 // create an extension function that cancels all notifications
 fun NotificationManager.cancelNotifications() {
     cancelAll()
