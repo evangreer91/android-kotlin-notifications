@@ -41,9 +41,19 @@ private val FLAGS = 0
 fun NotificationManager.sendNotification(messageBody: String, applicationContext: Context) {
     // Create the content intent for the notification, which launches
     // this activity
-    // TODO: Step 1.11 create intent
 
-    // TODO: Step 1.12 create PendingIntent
+    // create intent with application context and activity to be launched
+    val contentIntent = Intent(applicationContext, MainActivity::class.java)
+
+    // create a pending intent with application context, notification id, content intent, and pending intent flag
+    // pending intent flag specifies the option to create a new pending intent or use an existing one
+    // set PendingIntent.FLAG_UPDATE_CURRENT as flag since you want to update an existing one
+    val contentPendingIntent = PendingIntent.getActivity(
+        applicationContext,
+        NOTIFICATION_ID,
+        contentIntent,
+        PendingIntent.FLAG_UPDATE_CURRENT
+    )
 
     // TODO: Step 2.0 add style
 
@@ -64,7 +74,11 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
         .setContentTitle(applicationContext.getString(R.string.notification_title))
         .setContentText(messageBody)
 
-    // TODO: Step 1.13 set content intent
+    // pass pending intent to your notification
+    // now when you click notification, the pending intent will be triggered opening up main activity
+    // setting auto cancel to true, notification dismisses itself on click
+        .setContentIntent(contentPendingIntent)
+        .setAutoCancel(true)
 
     // TODO: Step 2.1 add style to builder
 
