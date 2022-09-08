@@ -62,8 +62,8 @@ class EggTimerFragment : Fragment() {
             getString(R.string.breakfast_notification_channel_name)
         )
 
-        // TODO: Step 3.4 call subscribe topics on start
-
+        // call subscribe to topic
+        subscribeTopic()
         return binding.root
     }
 
@@ -96,7 +96,21 @@ class EggTimerFragment : Fragment() {
         // TODO: Step 1.6 END create channel
     }
 
-    // TODO: Step 3.3 subscribe to breakfast topic
+    // topics allow you to send a message to multiple devices that have opted into that particular topic
+    // to subscribe to topic, client app calls subscribe to topic with FCM topic name
+    // we add an error handler to post a message toast
+    private fun subscribeTopic() {
+        // [START subscribe_topics]
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
+            .addOnCompleteListener { task ->
+                var msg = getString(R.string.message_subscribed)
+                if (!task.isSuccessful) {
+                    msg = getString(R.string.message_subscribe_failed)
+                }
+                Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            }
+        // [END subscribe_topics]
+    }
 
     companion object {
         fun newInstance() = EggTimerFragment()
