@@ -50,43 +50,53 @@ class EggTimerFragment : Fragment() {
         binding.eggTimerViewModel = viewModel
         binding.lifecycleOwner = this.viewLifecycleOwner
 
-        // call create channel with the channel id and channel name
-        // channel id and channel name are pulled from the string resources
+        // TODO: Step 1.7 call create channel
         createChannel(
             getString(R.string.egg_notification_channel_id),
             getString(R.string.egg_notification_channel_name)
         )
 
+        // create a separate channel for the FCM
+        createChannel(
+            getString(R.string.breakfast_notification_channel_id),
+            getString(R.string.breakfast_notification_channel_name)
+        )
+
+        // TODO: Step 3.4 call subscribe topics on start
+
         return binding.root
     }
 
     private fun createChannel(channelId: String, channelName: String) {
-
-        // channels are available from API level 26 and above
+        // TODO: Step 1.6 START create a channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // pass unique channel id, channel name, and importance level into channel constructor
+        	// Create channel to show notifications.
             val notificationChannel = NotificationChannel(
                 channelId,
                 channelName,
                 // TODO: Step 2.4 change importance
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_HIGH
             )
-            // TODO: Step 2.6 disable badges for this channel
+			    // TODO: Step 2.6 disable badges for this channel
+                .apply {
+                    setShowBadge(false)
+                }
 
-            // set various notification settings
             notificationChannel.enableLights(true)
             notificationChannel.lightColor = Color.RED
             notificationChannel.enableVibration(true)
-            notificationChannel.description = "Time for breakfast"
+            notificationChannel.description = getString(R.string.breakfast_notification_channel_description)
 
-            // get an instance of NotificationManager
             val notificationManager = requireActivity().getSystemService(
                 NotificationManager::class.java
             )
-            // create notification channel from notification channel object
             notificationManager.createNotificationChannel(notificationChannel)
+
         }
+        // TODO: Step 1.6 END create channel
     }
+
+    // TODO: Step 3.3 subscribe to breakfast topic
 
     companion object {
         fun newInstance() = EggTimerFragment()

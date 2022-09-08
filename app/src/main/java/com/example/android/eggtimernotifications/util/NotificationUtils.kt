@@ -109,7 +109,8 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
             snoozePendingIntent
         )
 
-    // TODO: Step 2.5 set priority
+    // to support API level 25 or lower, set priority to high using setPriority method
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
 
     // call notify with a unique id for your notification and with the notification object from your builder
     // we can use the same id for all notifications since there will be only one active notification
